@@ -117,12 +117,31 @@ public class NewPostActivity extends BaseActivity  {
     ViewListener viewListener = new ViewListener() {
         @Override
         public View setViewForPosition(int i) {
-            View post_from
-                    = (i == 0) ? getLayoutInflater().inflate(R.layout.post_source_carousel, null)
-                    : (i == 1) ? getLayoutInflater().inflate(R.layout.post_destination_carousel, null)
-                    : (i == 2) && NewPostActivity.this.postType ? getLayoutInflater().inflate(R.layout.post_passengercount_carousel, null)
-                    : (i == 2) && !NewPostActivity.this.postType ? getLayoutInflater().inflate(R.layout.post_pickuppoint_carousel, null)
-                    : null;
+            View post_from = null;
+            if(i == 0) {
+                post_from= getLayoutInflater().inflate(R.layout.post_source_carousel, null);
+                mSourceField = (EditText) post_from.findViewById(R.id.field_source);
+            }
+            if(i == 1) {
+                post_from= getLayoutInflater().inflate(R.layout.post_destination_carousel, null);
+                mDestinationField = (EditText) post_from.findViewById(R.id.field_destination);
+            }
+            if(i==2){
+                if(postType){
+                    post_from= getLayoutInflater().inflate(R.layout.post_passengercount_carousel, null);
+                    mpassengerCount = (EditText) post_from.findViewById(R.id.passengerCount);
+                }
+                else {
+                    post_from= getLayoutInflater().inflate(R.layout.post_pickuppoint_carousel, null);
+                    mpickupPoint = (EditText) post_from.findViewById(R.id.pickupPoint);
+                }
+                mSubmitButton.setVisibility(View.VISIBLE);
+                mSubmitButton.invalidate();
+            }
+            else{
+                mSubmitButton.setVisibility(View.GONE);
+                mSubmitButton.invalidate();
+            }
             NewPostActivity.this.setTitle((TextView) post_from.findViewById(R.id.carousel_title));
             return post_from;
         }
@@ -135,7 +154,6 @@ public class NewPostActivity extends BaseActivity  {
     }
 
     private void submitPost() {
-        System.out.println("mSourceField = "+ mSourceField);
         final String source = mSourceField.getText().toString();
         final String destination = mDestinationField.getText().toString();
 
